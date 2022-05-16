@@ -12,7 +12,9 @@ namespace OculusKiller
         {
             try
             {
-                RegistryKey steamVrKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 250820");
+                string steamVrId = "250820";
+                RegistryKey steamVrKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App " + steamVrId);
+
                 if (steamVrKey != null)
                 {
                     string installLocation = steamVrKey.GetValue("InstallLocation").ToString();
@@ -23,15 +25,13 @@ namespace OculusKiller
                         Process vrStartupProcess = Process.Start(vrStartupPath);
                         vrStartupProcess.WaitForExit();
                     }
-                    else
-                        MessageBox.Show("Unable to find vrstartup executable within SteamVR installation directory.");
+                    else Process.Start("steam://run/" + steamVrId);
                 }
-                else
-                    MessageBox.Show("Couldn't find SteamVR! (Did you install it and run it once?)");
+                else Process.Start("steam://run/" + steamVrId);
             }
             catch (Exception e)
             {
-                MessageBox.Show($"An exception occured while attempting to find SteamVR! (Did you install it and run it once?)\n\nMessage: {e}");
+                MessageBox.Show($"An exception occured while attempting to find and launch SteamVR!\n\nMessage: {e}");
             }
         }
     }
